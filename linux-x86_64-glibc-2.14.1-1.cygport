@@ -2,13 +2,11 @@ CROSS_HOST="x86_64-pc-linux-gnu"
 ORIG_PN="glibc"
 inherit cross
 
-DESCRIPTION="glibc for Linux i686 toolchain"
+DESCRIPTION="glibc for Linux x86_64 toolchain"
 HOMEPAGE="http://www.gnu.org/software/libc/"
 SRC_URI="mirror://gnu/glibc/glibc-${PV}.tar.xz"
 
 DIFF_EXCLUDES="manual"
-
-DEPS_PATH="/usr/lib/gconv"
 
 src_compile() {
 	cd ${B}
@@ -21,4 +19,8 @@ src_install() {
 	cyginstall install_root=${D}
 
 	cross_desysrootize ${CROSS_LIBDIR}/lib{c,pthread}.so
+
+	rm -f ${D}${CROSS_SYSROOT}/{etc,usr/bin,usr/sbin}/*
+	rm -fr ${D}${CROSS_LIBDIR}/*/
+	rm -fr ${D}${CROSS_DATADIR}/{i18n,locale,zoneinfo}/
 }

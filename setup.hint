@@ -1,3 +1,4 @@
 category: Devel
 requires: linux-x86_64-kernel-headers
 sdesc: "GNU C library for Linux x86_64 toolchain"
+ldesc: "GNU C library for Linux x86_64 toolchain"
