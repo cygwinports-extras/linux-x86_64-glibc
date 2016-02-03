@@ -1,0 +1,37 @@
+CROSS_HOST="x86_64-pc-linux-gnu"
+inherit cross
+
+NAME="linux-x86_64-glibc"
+VERSION=2.15
+RELEASE=1
+CATEGORY="Devel"
+SUMMARY="GNU C library for Linux x86_64 toolchain"
+DESCRIPTION="This package does NOT contain cygwin binaries.  Instead, it
+contains Linux x86_64 binaries.  It is for use with the
+linux-x86_64-gcc cross compiler, and installs into the
+/usr/x86_64-pc-linux-gnu/sys-root/usr/{lib,include} directories."
+HOMEPAGE="http://www.gnu.org/software/libc/"
+SRC_URI="mirror://gnu/glibc/glibc-${VERSION}.tar.xz"
+SRC_DIR="glibc-${VERSION}"
+
+REQUIRES="linux-x86_64-kernel-headers"
+
+DIFF_EXCLUDES="manual"
+
+src_compile() {
+	cd ${B}
+	cygconf
+	cygmake -j1 PARALLELMFLAGS="${MAKEOPTS}"
+}
+
+src_install() {
+	cd ${B}
+	cyginstall install_root=${D}
+
+	cross_desysrootize ${CROSS_LIBDIR}/lib{c,pthread}.so
+
+	rm -f ${D}${CROSS_SYSROOT}/{etc,usr/bin,usr/sbin}/*
+	rm -fr ${D}${CROSS_LIBDIR}/*/
+	rm -fr ${D}${CROSS_DATADIR}/{i18n,locale,zoneinfo}/
+	rm -f ${D}/var/db/Makefile
+}
